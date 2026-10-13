@@ -17,3 +17,12 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# Planung (lokal, nicht im öffentlichen Repo)
+claude/
+
+# Geheimnisse: Signierschlüssel und Zugangsdaten nur als GitHub-Secrets
+*.jks
+*.keystore
+keystore.properties
+.env

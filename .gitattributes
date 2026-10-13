@@ -1,0 +1,7 @@
+# Zeilenenden fest: Shell-Skripte mit LF (Linux, macOS, GitHub Actions), Batch mit CRLF.
+* text=auto
+gradlew text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.png binary
