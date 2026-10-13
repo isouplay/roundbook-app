@@ -1,0 +1,12 @@
+-- This installation. The device id is random, created once at the first start.
+-- Not derived from events, so rebuilding the cached views leaves it alone.
+CREATE TABLE device (
+    singleton INTEGER NOT NULL PRIMARY KEY CHECK (singleton = 1),
+    device_id TEXT NOT NULL
+);
+
+insertIfMissing:
+INSERT OR IGNORE INTO device(singleton, device_id) VALUES (1, ?);
+
+selectDeviceId:
+SELECT device_id FROM device WHERE singleton = 1;

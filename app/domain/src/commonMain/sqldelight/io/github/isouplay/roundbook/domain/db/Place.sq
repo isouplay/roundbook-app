@@ -1,0 +1,22 @@
+-- Cached view of the places, derived from the event log.
+CREATE TABLE place (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+);
+
+insert:
+INSERT OR IGNORE INTO place(id, name, kind, created_at) VALUES (?, ?, ?, ?);
+
+updateName:
+UPDATE place SET name = ? WHERE id = ?;
+
+selectAll:
+SELECT * FROM place;
+
+selectById:
+SELECT * FROM place WHERE id = ?;
+
+deleteAll:
+DELETE FROM place;

@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-// Shared by app and server: later menu format, ids, signatures, mailbox protocol.
+// Shared by app and server: menu model and menu file format; later ids, signatures, mailbox protocol.
 // No UI, no platform libraries.
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -25,6 +26,11 @@ kotlin {
     }
 
     sourceSets {
+        commonMain.dependencies {
+            // Part of the public API: Menu is @Serializable, MenuFile.validFrom is a LocalDate.
+            api(libs.kotlinx.serialization.json)
+            api(libs.kotlinx.datetime)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

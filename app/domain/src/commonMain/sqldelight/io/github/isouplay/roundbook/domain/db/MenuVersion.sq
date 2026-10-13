@@ -1,0 +1,38 @@
+-- Cached view of the menu versions per place (price history), derived from the event log.
+-- The current menu of a place is the newest version: latest valid_from, then latest recording.
+CREATE TABLE menu_version (
+    id TEXT NOT NULL PRIMARY KEY,
+    place_id TEXT NOT NULL,
+    -- ISO date (YYYY-MM-DD) from which the prices hold.
+    valid_from TEXT NOT NULL,
+    label TEXT NOT NULL,
+    recorded_at INTEGER NOT NULL,
+    device_id TEXT NOT NULL,
+    sequence INTEGER NOT NULL,
+    -- The menu as JSON (MenuJson).
+    menu TEXT NOT NULL
+);
+
+CREATE INDEX menu_version_place ON menu_version(place_id);
+
+insert:
+INSERT OR IGNORE INTO menu_version(id, place_id, valid_from, label, recorded_at, device_id, sequence, menu)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+selectByPlace:
+SELECT * FROM menu_version WHERE place_id = ?
+ORDER BY valid_from DESC, recorded_at DESC, device_id DESC, sequence DESC;
+
+selectCurrent:
+SELECT * FROM menu_version WHERE place_id = ?
+ORDER BY valid_from DESC, recorded_at DESC, device_id DESC, sequence DESC
+LIMIT 1;
+
+selectById:
+SELECT * FROM menu_version WHERE id = ?;
+
+selectAll:
+SELECT * FROM menu_version;
+
+deleteAll:
+DELETE FROM menu_version;

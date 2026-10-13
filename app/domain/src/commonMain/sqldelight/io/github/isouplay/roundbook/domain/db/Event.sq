@@ -1,0 +1,43 @@
+-- Event log: every change is an immutable event. Rows are only ever inserted,
+-- never updated or deleted; deleting something is an event itself.
+CREATE TABLE event (
+    id TEXT NOT NULL PRIMARY KEY,
+    device_id TEXT NOT NULL,
+    -- Running number per device, starting at 1.
+    sequence INTEGER NOT NULL,
+    -- Time of recording, milliseconds since 1970-01-01 UTC.
+    recorded_at INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    -- Content as JSON (kotlinx.serialization).
+    payload TEXT NOT NULL,
+    -- Schema version of the content.
+    payload_version INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX event_device_sequence ON event(device_id, sequence);
+
+-- Order of the event log: time, then device id, then running number (conflict rule).
+CREATE INDEX event_order ON event(recorded_at, device_id, sequence);
+
+insert:
+INSERT OR IGNORE INTO event(id, device_id, sequence, recorded_at, type, payload, payload_version)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM event ORDER BY recorded_at, device_id, sequence;
+
+countById:
+SELECT COUNT(*) FROM event WHERE id = ?;
+
+countAll:
+SELECT COUNT(*) FROM event;
+
+lastOfDevice:
+SELECT * FROM event WHERE device_id = ? ORDER BY sequence DESC LIMIT 1;
+
+-- Events that come after the given position in the order of the event log.
+countAfter:
+SELECT COUNT(*) FROM event
+WHERE recorded_at > :recordedAt
+   OR (recorded_at = :recordedAt AND device_id > :deviceId)
+   OR (recorded_at = :recordedAt AND device_id = :deviceId AND sequence > :sequence);

@@ -1,4 +1,109 @@
 <resources>
     <string name="app_name">Roundbook</string>
-    <string name="placeholder_under_construction">Im Aufbau</string>
+    <string name="back">Zurück</string>
+
+    <!-- Places -->
+    <string name="places_title">Orte</string>
+    <string name="places_empty">Noch kein Ort angelegt.</string>
+    <string name="place_name_label">Name des Orts</string>
+    <string name="place_create">Ort anlegen</string>
+    <string name="place_name_empty">Bitte einen Namen eingeben.</string>
+    <string name="place_name_too_long">Der Name ist zu lang (höchstens %1$s Zeichen).</string>
+    <string name="place_unknown">Diesen Ort gibt es nicht mehr.</string>
+
+    <!-- Place -->
+    <string name="place_menu_current">Aktuelle Karte: gültig ab %1$s</string>
+    <string name="place_menu_current_named">Aktuelle Karte: %1$s, gültig ab %2$s</string>
+    <string name="place_menu_none">Noch keine Karte.</string>
+    <string name="place_load_menu">Karte laden</string>
+    <string name="place_show_menu">Karte ansehen</string>
+    <string name="menu_imported">Karte eingelesen: %1$s Getränke, gültig ab %2$s.</string>
+    <string name="menu_unchanged">Diese Karte ist schon die aktuelle.</string>
+    <string name="menu_rejected">Karte nicht eingelesen. %1$s</string>
+    <string name="menu_file_unreadable">Die Datei konnte nicht gelesen werden.</string>
+
+    <!-- Menu -->
+    <string name="menu_title">Karte: %1$s</string>
+    <string name="menu_valid_from">gültig ab %1$s</string>
+    <string name="menu_empty">Auf dieser Karte stehen keine Getränke.</string>
+
+    <!-- Problems in a menu file: where -->
+    <string name="problem_at">%1$s: %2$s</string>
+    <string name="problem_place_file">Datei</string>
+    <string name="problem_place_menu">Karte</string>
+    <string name="problem_place_category">Kategorie „%1$s“</string>
+    <string name="problem_place_drink">Getränk „%1$s“</string>
+    <string name="problem_place_drink_number">Getränk Nr. %1$s</string>
+    <string name="problem_place_size_label">%1$s, Größe „%2$s“</string>
+    <string name="problem_place_size_number">%1$s, Größe %2$s</string>
+    <string name="problem_place_mix_tier">Preisstufe „%1$s“</string>
+    <string name="problem_place_mix">%1$s, Mischung „%2$s“</string>
+
+    <!-- Problems in a menu file: which field -->
+    <string name="field_value">Wert</string>
+    <string name="field_bar_name">Name der Bar</string>
+    <string name="field_currency">Währung</string>
+    <string name="field_version_label">Name der Version</string>
+    <string name="field_valid_from">Datum</string>
+    <string name="field_categories">Kategorien</string>
+    <string name="field_drinks">Getränke</string>
+    <string name="field_mix_tiers">Preisstufen</string>
+    <string name="field_mixes">Mischungen</string>
+    <string name="field_sizes">Größen</string>
+    <string name="field_name">Name</string>
+    <string name="field_icon">Symbol</string>
+    <string name="field_note">Notiz</string>
+    <string name="field_abv">Vol.-%</string>
+    <string name="field_size_label">Bezeichnung</string>
+    <string name="field_price">Preis</string>
+    <string name="field_volume">Menge</string>
+    <string name="field_spirit">Schnaps-Anteil</string>
+    <string name="field_mixer">Mischgetränk</string>
+    <string name="field_match">Suchwort</string>
+    <string name="field_category">Kategorie</string>
+    <string name="field_allergens">Allergene</string>
+    <string name="field_additives">Zusatzstoffe</string>
+
+    <!-- Units after a number -->
+    <string name="unit_abv">Vol.-%</string>
+    <string name="unit_price">€</string>
+    <string name="unit_volume">l</string>
+    <string name="unit_spirit">cl</string>
+
+    <!-- Problems in a menu file: what -->
+    <string name="problem_file_too_large">Die Datei ist zu groß (höchstens %1$s MB).</string>
+    <string name="problem_not_json">Die Datei ist keine JSON-Datei oder beschädigt.</string>
+    <string name="problem_not_recognized">Datei nicht erkannt – erwartet wird eine Kartendatei (roundbook-karte).</string>
+    <string name="problem_price_history">Das ist ein Preisverlauf. Eingelesen wird bisher nur eine einzelne Karte.</string>
+    <string name="problem_nested_format">Die Karte hat ein älteres Format, das hier nicht gelesen wird.</string>
+    <string name="problem_format_version">Die Datei stammt aus einer neueren Fassung (Format %1$s) und kann hier noch nicht gelesen werden.</string>
+    <string name="problem_invalid_date">Ungültiges Datum „%1$s“.</string>
+    <string name="problem_invalid_date_plain">Ungültiges Datum.</string>
+    <string name="problem_not_an_object">ein Eintrag in %1$s ist kein Objekt</string>
+    <string name="problem_not_an_object_plain">ist kein Objekt</string>
+    <string name="problem_not_a_list">%1$s ist keine Liste</string>
+    <string name="problem_not_text">%1$s ist kein Text</string>
+    <string name="problem_text_too_long">%1$s ist zu lang (höchstens %2$s Zeichen)</string>
+    <string name="problem_not_a_number">%1$s ist keine Zahl</string>
+    <string name="problem_not_a_number_text">%1$s „%2$s“ ist keine Zahl</string>
+    <string name="problem_number_out_of_range">%1$s %2$s %3$s ist nicht möglich (0 bis %4$s %3$s)</string>
+    <string name="problem_abv_out_of_range">%1$s %2$s ist nicht möglich (0 bis %3$s %2$s)</string>
+    <string name="problem_not_a_boolean">%1$s ist weder true noch false</string>
+    <string name="problem_invalid_id">id „%1$s“ – erlaubt sind Buchstaben a–z, Ziffern, - und _ (höchstens 64)</string>
+    <string name="problem_too_many">%1$s %2$s sind zu viele (höchstens %3$s)</string>
+    <string name="problem_price_missing">Preis fehlt</string>
+    <string name="problem_price_too_precise">Preis %1$s hat mehr als zwei Nachkommastellen</string>
+    <string name="problem_spirit_exceeds_volume">%1$s cl Schnaps passen nicht in %2$s l</string>
+    <string name="problem_unknown_allergen">Allergen „%1$s“ gibt es nicht</string>
+    <string name="problem_duplicate_allergen">Allergen „%1$s“ steht doppelt</string>
+    <string name="problem_unknown_additive">Zusatzstoff „%1$s“ gibt es nicht</string>
+    <string name="problem_duplicate_additive">Zusatzstoff „%1$s“ steht doppelt</string>
+    <string name="problem_unknown_mix_tier">Preisstufe „%1$s“ gibt es nicht</string>
+    <string name="problem_duplicate_category_id">Kategorie-id „%1$s“ kommt doppelt vor</string>
+    <string name="problem_drink_without_name">hat keinen Namen</string>
+    <string name="problem_unknown_category">unbekannte Kategorie „%1$s“</string>
+    <string name="problem_duplicate_drink_id">id „%1$s“ kommt doppelt vor</string>
+    <string name="problem_duplicate_size_label">Größen-Bezeichnungen müssen eindeutig sein</string>
+    <string name="problem_drink_without_price">hat keinen Preis</string>
+    <string name="problem_mix_without_name">eine Mischung hat keinen Namen</string>
 </resources>

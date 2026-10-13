@@ -17,6 +17,11 @@ kotlin {
             baseName = "Shared"
             isStatic = true
         }
+        // SQLite of the system for the storage in :app:domain (test binaries; the app links it via
+        // OTHER_LDFLAGS in app/iosApp/Configuration/Config.xcconfig, because the framework is static).
+        iosTarget.binaries.all {
+            linkerOpts("-lsqlite3")
+        }
     }
 
     android {
@@ -44,6 +49,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            // File picker of the system and the back button.
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
             api(project(":app:domain"))
