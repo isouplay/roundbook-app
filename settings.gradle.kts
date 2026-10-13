@@ -27,7 +27,11 @@ dependencyResolutionManagement {
     }
 }
 
+// App: Android entry point, shared Compose UI, local core of the app.
 include(":app:androidApp")
 include(":app:shared")
+include(":app:domain")
+// Shared by app and server.
 include(":core")
+// Ktor server.
 include(":server")

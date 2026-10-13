@@ -1,0 +1,64 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Linux (verifyAll)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+      # Azul Zulu 21, as requested by gradle/gradle-daemon-jvm.properties.
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: verifyAll
+        run: ./gradlew verifyAll --stacktrace
+
+  macos:
+    name: macOS (iOS tests and iOS app)
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+      - name: iOS tests in the simulator
+        run: >
+          ./gradlew --stacktrace
+          :core:iosSimulatorArm64Test
+          :app:domain:iosSimulatorArm64Test
+          :app:shared:iosSimulatorArm64Test
+      - name: Build iOS app for the simulator (unsigned)
+        run: >
+          xcodebuild
+          -project app/iosApp/iosApp.xcodeproj
+          -scheme iosApp
+          -configuration Debug
+          -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          build

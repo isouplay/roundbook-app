@@ -9,3 +9,28 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.ktor) apply false
 }
+
+// Check commands. Same on Windows, Linux and GitHub Actions.
+// iOS tests need macOS and run in GitHub Actions (.github/workflows/verify.yml).
+
+tasks.register("verifyQuick") {
+    group = "verification"
+    description = "Fast tests without device or emulator: :core and :app:domain on the JVM, plus :server."
+    dependsOn(
+        ":core:jvmTest",
+        ":app:domain:jvmTest",
+        ":server:test",
+    )
+}
+
+tasks.register("verifyAll") {
+    group = "verification"
+    description = "All tests possible on this machine plus the Android debug build."
+    dependsOn(
+        "verifyQuick",
+        ":core:testAndroidHostTest",
+        ":app:domain:testAndroidHostTest",
+        ":app:shared:testAndroidHostTest",
+        ":app:androidApp:assembleDebug",
+    )
+}
