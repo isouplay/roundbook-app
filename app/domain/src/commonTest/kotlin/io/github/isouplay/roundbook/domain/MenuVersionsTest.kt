@@ -129,7 +129,8 @@ class MenuVersionsTest {
     }
 
     @Test
-    fun storageHasSchemaVersionOne() {
-        assertEquals(1L, Roundbook.SCHEMA_VERSION)
+    fun storageHasSchemaVersionTwo() {
+        // 1: package 2; 2: package 3 (evenings, entries, taken-back actions, favourites).
+        assertEquals(2L, Roundbook.SCHEMA_VERSION)
     }
 }

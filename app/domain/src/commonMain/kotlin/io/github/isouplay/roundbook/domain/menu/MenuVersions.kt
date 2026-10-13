@@ -1,5 +1,7 @@
 package io.github.isouplay.roundbook.domain.menu
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import io.github.isouplay.roundbook.core.menu.Menu
 import io.github.isouplay.roundbook.core.menu.MenuFileReader
 import io.github.isouplay.roundbook.core.menu.MenuJson
@@ -12,7 +14,9 @@ import io.github.isouplay.roundbook.domain.event.EventLog
 import io.github.isouplay.roundbook.domain.event.EventType
 import io.github.isouplay.roundbook.domain.event.MenuImported
 import io.github.isouplay.roundbook.domain.place.Places
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
+import kotlin.coroutines.CoroutineContext
 
 /** One version of the menu of a place, without the menu itself (for lists). */
 data class MenuVersionInfo(
@@ -54,6 +58,7 @@ class MenuVersions internal constructor(
     private val places: Places,
     private val today: () -> LocalDate,
     private val newId: () -> String,
+    private val readContext: CoroutineContext,
 ) {
     private val queries get() = database.menuVersionQueries
 
@@ -94,6 +99,10 @@ class MenuVersions internal constructor(
     /** The current menu of the place, or null if it has none yet. */
     fun current(placeId: PlaceId): MenuVersion? =
         queries.selectCurrent(placeId.value, ::versionOf).executeAsOneOrNull()
+
+    /** The current menu of the place; updates itself when a new version is read. */
+    fun currentFlow(placeId: PlaceId): Flow<MenuVersion?> =
+        queries.selectCurrent(placeId.value, ::versionOf).asFlow().mapToOneOrNull(readContext)
 
     fun get(id: MenuVersionId): MenuVersion? =
         queries.selectById(id.value, ::versionOf).executeAsOneOrNull()

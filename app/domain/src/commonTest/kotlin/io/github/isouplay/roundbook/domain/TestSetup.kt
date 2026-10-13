@@ -1,6 +1,7 @@
 package io.github.isouplay.roundbook.domain
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 
 /** A Roundbook in memory with a clock and ids the test controls. */
 class TestRoundbook(
@@ -18,6 +19,7 @@ class TestRoundbook(
         driver = driver,
         clock = { now },
         today = { today },
+        timeZone = { TimeZone.UTC },
         newId = {
             // The first id is the device id; the rest are numbered.
             if (first) {

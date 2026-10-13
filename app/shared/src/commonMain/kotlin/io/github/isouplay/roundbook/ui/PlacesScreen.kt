@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.isouplay.roundbook.domain.PlaceId
@@ -27,8 +29,10 @@ import io.github.isouplay.roundbook.domain.Roundbook
 import io.github.isouplay.roundbook.domain.place.PlaceNameProblem
 import io.github.isouplay.roundbook.domain.place.PlaceResult
 import io.github.isouplay.roundbook.domain.place.Places
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import roundbook.app.shared.generated.resources.Res
+import roundbook.app.shared.generated.resources.back
 import roundbook.app.shared.generated.resources.place_create
 import roundbook.app.shared.generated.resources.place_name_empty
 import roundbook.app.shared.generated.resources.place_name_label
@@ -36,14 +40,17 @@ import roundbook.app.shared.generated.resources.place_name_too_long
 import roundbook.app.shared.generated.resources.places_empty
 import roundbook.app.shared.generated.resources.places_title
 
-/** Screen 1: list of places, create a place by name. */
+/** Ich → Orte: list of places, create a place by name. */
 @Composable
-fun PlacesScreen(roundbook: Roundbook, onOpenPlace: (PlaceId) -> Unit) {
-    var places by remember { mutableStateOf(roundbook.places.all()) }
+fun PlacesScreen(roundbook: Roundbook, onBack: () -> Unit, onOpenPlace: (PlaceId) -> Unit) {
+    val loaded by remember { roundbook.places.allFlow() }.collectLoaded()
+    val places = loaded?.value
+    val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var problem by remember { mutableStateOf<PlaceNameProblem?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        TextButton(onClick = onBack) { Text(stringResource(Res.string.back)) }
         Text(stringResource(Res.string.places_title), style = MaterialTheme.typography.headlineMedium)
 
         OutlinedTextField(
@@ -57,14 +64,16 @@ fun PlacesScreen(roundbook: Roundbook, onOpenPlace: (PlaceId) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
         )
         Button(onClick = {
-            when (val result = roundbook.places.create(name)) {
-                is PlaceResult.Done -> {
-                    name = ""
-                    places = roundbook.places.all()
-                    onOpenPlace(result.place.id)
+            val typed = name
+            scope.launch {
+                when (val result = roundbook.inBackground { this.places.create(typed) }) {
+                    is PlaceResult.Done -> {
+                        name = ""
+                        onOpenPlace(result.place.id)
+                    }
+                    is PlaceResult.Rejected -> problem = result.problem
+                    PlaceResult.UnknownPlace -> Unit
                 }
-                is PlaceResult.Rejected -> problem = result.problem
-                PlaceResult.UnknownPlace -> Unit
             }
         }) {
             Text(stringResource(Res.string.place_create))
@@ -76,7 +85,9 @@ fun PlacesScreen(roundbook: Roundbook, onOpenPlace: (PlaceId) -> Unit) {
         }
 
         Spacer(Modifier.height(8.dp))
-        if (places.isEmpty()) {
+        if (places == null) {
+            // Still loading.
+        } else if (places.isEmpty()) {
             Text(stringResource(Res.string.places_empty))
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {

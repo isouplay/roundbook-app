@@ -77,7 +77,7 @@ class EventLogTest {
             deviceId = DeviceId("device-z"),
             sequence = 1,
             recordedAt = 2_000_000L,
-            type = "evening.started",
+            type = "crew.joined",
             payload = """{"anything": 1}""",
             payloadVersion = 1,
         )

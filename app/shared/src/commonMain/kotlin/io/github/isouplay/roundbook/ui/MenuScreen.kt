@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,11 +29,14 @@ import roundbook.app.shared.generated.resources.menu_title
 import roundbook.app.shared.generated.resources.menu_valid_from
 import roundbook.app.shared.generated.resources.place_menu_none
 
-/** Screen 3: the current menu of a place – categories, drinks, sizes and prices. Only to look at. */
+/** Ich → Orte → Ort → Karte: the current menu of a place – categories, drinks, sizes and prices. Only to look at. */
 @Composable
 fun MenuScreen(roundbook: Roundbook, placeId: PlaceId, onBack: () -> Unit) {
-    val place = remember(placeId) { roundbook.places.get(placeId) }
-    val version = remember(placeId) { roundbook.menus.current(placeId) }
+    val places by remember { roundbook.places.allFlow() }.collectLoaded()
+    val menu by remember(placeId) { roundbook.menus.currentFlow(placeId) }.collectLoaded()
+    val place = places?.value?.firstOrNull { it.id == placeId }
+    val loaded = menu ?: return
+    val version = loaded.value
     val sections = remember(version) { version?.menu?.sections().orEmpty() }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {

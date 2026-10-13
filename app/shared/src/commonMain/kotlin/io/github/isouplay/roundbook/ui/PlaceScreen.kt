@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import io.github.isouplay.roundbook.core.menu.MenuProblemKind
 import io.github.isouplay.roundbook.domain.PlaceId
 import io.github.isouplay.roundbook.domain.Roundbook
 import io.github.isouplay.roundbook.domain.menu.MenuImportResult
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import roundbook.app.shared.generated.resources.Res
 import roundbook.app.shared.generated.resources.back
@@ -43,29 +45,34 @@ private sealed interface LoadMessage {
     data object Unreadable : LoadMessage
 }
 
-/** Screen 2: one place – name, date of the current menu, load a menu file. */
+/** Ich → Orte → one place: name, date of the current menu, load a menu file. */
 @Composable
 fun PlaceScreen(roundbook: Roundbook, placeId: PlaceId, onBack: () -> Unit, onShowMenu: () -> Unit) {
-    val place = remember(placeId) { roundbook.places.get(placeId) }
-    var current by remember(placeId) { mutableStateOf(roundbook.menus.current(placeId)?.info) }
+    val places by remember { roundbook.places.allFlow() }.collectLoaded()
+    val menu by remember(placeId) { roundbook.menus.currentFlow(placeId) }.collectLoaded()
     var message by remember(placeId) { mutableStateOf<LoadMessage?>(null) }
+    val scope = rememberCoroutineScope()
 
     val pickFile = rememberMenuFilePicker { picked ->
-        message = when (picked) {
-            is PickedFile.Content -> LoadMessage.Result(roundbook.menus.importMenu(placeId, picked.text))
-            PickedFile.TooLarge -> LoadMessage.Result(
-                MenuImportResult.Rejected(
-                    MenuProblem(
-                        kind = MenuProblemKind.FILE_TOO_LARGE,
-                        place = MenuPlace.File,
-                        limit = MenuLimits.FILE_BYTES_MAX.toDouble(),
+        scope.launch {
+            message = when (picked) {
+                is PickedFile.Content -> LoadMessage.Result(roundbook.inBackground { menus.importMenu(placeId, picked.text) })
+                PickedFile.TooLarge -> LoadMessage.Result(
+                    MenuImportResult.Rejected(
+                        MenuProblem(
+                            kind = MenuProblemKind.FILE_TOO_LARGE,
+                            place = MenuPlace.File,
+                            limit = MenuLimits.FILE_BYTES_MAX.toDouble(),
+                        ),
                     ),
-                ),
-            )
-            PickedFile.Unreadable -> LoadMessage.Unreadable
+                )
+                PickedFile.Unreadable -> LoadMessage.Unreadable
+            }
         }
-        current = roundbook.menus.current(placeId)?.info
     }
+    val loadedPlaces = places ?: return
+    val place = loadedPlaces.value.firstOrNull { it.id == placeId }
+    val current = menu?.value?.info
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TextButton(onClick = onBack) { Text(stringResource(Res.string.back)) }

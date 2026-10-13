@@ -1,9 +1,12 @@
 package io.github.isouplay.roundbook.domain.event
 
 import io.github.isouplay.roundbook.domain.DeviceId
+import io.github.isouplay.roundbook.domain.EntryId
+import io.github.isouplay.roundbook.domain.EveningId
 import io.github.isouplay.roundbook.domain.EventId
 import io.github.isouplay.roundbook.domain.MenuVersionId
 import io.github.isouplay.roundbook.domain.PlaceId
+import io.github.isouplay.roundbook.domain.entry.EntrySnapshot
 import io.github.isouplay.roundbook.domain.place.PlaceKind
 import io.github.isouplay.roundbook.core.menu.Menu
 import kotlinx.serialization.Serializable
@@ -53,6 +56,14 @@ enum class EventType(val code: String) {
     PLACE_CREATED("place.created"),
     PLACE_RENAMED("place.renamed"),
     MENU_IMPORTED("menu.imported"),
+    EVENING_STARTED("evening.started"),
+    EVENING_ENDED("evening.ended"),
+    ENTRY_ADDED("entry.added"),
+    ENTRY_CHANGED("entry.changed"),
+    ENTRY_DELETED("entry.deleted"),
+    ACTION_UNDONE("action.undone"),
+    FAVORITE_PINNED("favorite.pinned"),
+    FAVORITE_UNPINNED("favorite.unpinned"),
     ;
 
     companion object {
@@ -85,6 +96,72 @@ data class MenuImported(
     val label: String,
     val menu: Menu,
 )
+
+/** An evening began at a place. */
+@Serializable
+data class EveningStarted(
+    val eveningId: EveningId,
+    val placeId: PlaceId,
+    /** Milliseconds since 1970-01-01 UTC. */
+    val startedAt: Long,
+)
+
+@Serializable
+data class EveningEnded(
+    val eveningId: EveningId,
+    /** Milliseconds since 1970-01-01 UTC. */
+    val endedAt: Long,
+)
+
+/** A drink was booked: what is needed for calculating later, as it was at the time of booking. */
+@Serializable
+data class EntryAdded(
+    val entryId: EntryId,
+    val eveningId: EveningId,
+    /** When it was drunk, milliseconds since 1970-01-01 UTC. */
+    val drunkAt: Long,
+    val snapshot: EntrySnapshot,
+)
+
+/**
+ * One or more entries were changed: another drink ([snapshot]) and/or another time ([drunkAt]), for all of
+ * [entryIds]. What is null stays as it was.
+ */
+@Serializable
+data class EntryChanged(
+    val entryIds: List<EntryId>,
+    val eveningId: EveningId,
+    val snapshot: EntrySnapshot? = null,
+    val drunkAt: Long? = null,
+)
+
+@Serializable
+data class EntryDeleted(
+    val entryId: EntryId,
+    val eveningId: EveningId,
+)
+
+/** An own action (booking, deleting, changing) was taken back. The event [eventId] stays in the log. */
+@Serializable
+data class ActionUndone(
+    val eventId: EventId,
+)
+
+/** [key] is a FavoriteKey.code: a drink id or "mix:[spirit id, mixer id]". */
+@Serializable
+data class FavoritePinned(
+    val placeId: PlaceId,
+    val key: String,
+)
+
+@Serializable
+data class FavoriteUnpinned(
+    val placeId: PlaceId,
+    val key: String,
+)
+
+/** Kinds of events that are own actions on entries and can be taken back. */
+internal val UNDOABLE_TYPES: List<EventType> = listOf(EventType.ENTRY_ADDED, EventType.ENTRY_CHANGED, EventType.ENTRY_DELETED)
 
 /** JSON for payloads. Unknown keys are ignored (payloads written by a newer app). */
 internal val EventJson: Json = Json {

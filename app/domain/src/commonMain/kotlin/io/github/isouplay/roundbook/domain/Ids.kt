@@ -20,3 +20,13 @@ value class EventId(val value: String)
 @Serializable
 @JvmInline
 value class DeviceId(val value: String)
+
+/** One evening at a place. */
+@Serializable
+@JvmInline
+value class EveningId(val value: String)
+
+/** One entry (booking) of an evening. */
+@Serializable
+@JvmInline
+value class EntryId(val value: String)

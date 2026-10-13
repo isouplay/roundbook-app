@@ -1,0 +1,40 @@
+-- Migration from schema version 1 (package 2) to 2 (package 3): evenings, entries, taken-back actions
+-- and favourites. Only new tables; the event log and the views of package 2 stay as they are.
+-- The new views start empty: the event log of package 2 holds no events for them.
+
+CREATE TABLE evening (
+    id TEXT NOT NULL PRIMARY KEY,
+    place_id TEXT NOT NULL,
+    started_at INTEGER NOT NULL,
+    ended_at INTEGER
+);
+
+CREATE INDEX evening_place ON evening(place_id, started_at);
+
+CREATE TABLE entry (
+    id TEXT NOT NULL PRIMARY KEY,
+    evening_id TEXT NOT NULL,
+    drunk_at INTEGER NOT NULL,
+    added_at INTEGER NOT NULL,
+    snapshot TEXT NOT NULL
+);
+
+CREATE INDEX entry_evening ON entry(evening_id);
+
+CREATE TABLE entry_event (
+    entry_id TEXT NOT NULL,
+    event_id TEXT NOT NULL,
+    PRIMARY KEY (entry_id, event_id)
+);
+
+CREATE TABLE undone_event (
+    event_id TEXT NOT NULL PRIMARY KEY,
+    undone_by TEXT NOT NULL
+);
+
+CREATE TABLE favorite (
+    place_id TEXT NOT NULL,
+    fav_key TEXT NOT NULL,
+    pinned_at INTEGER NOT NULL,
+    PRIMARY KEY (place_id, fav_key)
+);

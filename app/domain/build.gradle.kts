@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-// Local core of the app: event log, storage (SQLDelight), places and menu versions.
+// Local core of the app: event log, storage (SQLDelight), places, menu versions, evenings, entries, favourites.
 // Later: calculations (statistics, blood alcohol, bill). No UI.
 // The JVM target exists for fast tests without a device.
 plugins {
@@ -38,6 +38,9 @@ kotlin {
         commonMain.dependencies {
             api(project(":core"))
             api(libs.sqldelight.runtime)
+            // Reading as Flow (lists update themselves) and writing off the main thread.
+            api(libs.sqldelight.coroutines)
+            api(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
         }
         androidMain.dependencies {

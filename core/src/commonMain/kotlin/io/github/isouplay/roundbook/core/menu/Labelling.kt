@@ -60,3 +60,30 @@ enum class Additive(val code: String) {
         fun fromCode(code: String): Additive? = entries.firstOrNull { it.code == code }
     }
 }
+
+/**
+ * Allergens and additives of a mix: spirit and mixer together. [labelling] is null if nothing can be said;
+ * [missing] names the parts without information while the others contain something.
+ */
+data class CombinedLabelling(
+    val labelling: Labelling?,
+    val missing: List<String>,
+)
+
+/**
+ * Combines the labelling of the parts of a mix (name and labelling of each part), like the old app
+ * (`zusammen` in angaben.js): what one part contains, the mix contains. A part without information hides
+ * nothing: if the others contain something, that is shown together with the names of the parts without
+ * information; otherwise the mix counts as "no information" – "contains nothing" is never claimed then.
+ */
+fun combineLabelling(parts: List<Pair<String, Labelling?>>): CombinedLabelling {
+    val without = parts.filter { it.second == null }.map { it.first }
+    val with = parts.mapNotNull { it.second }
+    if (with.isEmpty()) return CombinedLabelling(null, emptyList())
+    val combined = Labelling(
+        allergens = with.flatMap { it.allergens }.distinct().sortedBy { it.ordinal },
+        additives = with.flatMap { it.additives }.distinct().sortedBy { it.ordinal },
+    )
+    if (!combined.containsSomething && without.isNotEmpty()) return CombinedLabelling(null, emptyList())
+    return CombinedLabelling(combined, if (combined.containsSomething) without else emptyList())
+}

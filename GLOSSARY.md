@@ -79,3 +79,39 @@ Wer einen neuen Begriff einführt, trägt ihn hier nach.
 | Kennzeichnung (Allergene und Zusatzstoffe) | `Labelling` |
 | Symbol einer Kategorie | `icon` |
 | Abschnitt der Kartenansicht | `MenuSection` |
+
+## Heute und Buchen (Paket 3)
+
+| Konzept (deutsch) | Code |
+|---|---|
+| Abende (Ablauf), laufender Abend | `Evenings`, `Evening.isRunning`, `Evenings.running` |
+| Abend beginnen, beenden | `Evenings.start` (`StartResult`), `Evenings.end` (`EndResult`) |
+| Abend begonnen, Abend beendet (Ereignis) | `EveningStarted` (`evening.started`), `EveningEnded` (`evening.ended`) |
+| Datum eines Abends, Tagesgrenze 6 Uhr | `Evenings.eveningDate`, `Evenings.DAY_CUTOFF_HOUR` |
+| Buchungen (Ablauf) | `Entries` (`EntryId`) |
+| Buchen | `Entries.book` (`BookResult`, `BookProblem`) |
+| Was gebucht wird: von der Karte, als Mischung, frei | `DrinkChoice.FromMenu`, `DrinkChoice.AsMix`, `DrinkChoice.Free` |
+| Freie Buchung | `DrinkChoice.Free` |
+| Momentaufnahme einer Buchung | `EntrySnapshot` |
+| Zeitpunkt des Trinkens, gebucht am | `drunkAt`, `addedAt` |
+| cl Spirituose (Mischung) | `spiritCl` |
+| Mischgetränk der Buchung | `mixerId`, `mixerName` |
+| Allgemeine Mischung („mit Mischgetränk“, ohne Suchwort) | `generalMix` |
+| Mischpreis zu Größe und Mischgetränk | `mixOffer` (`MixOffer`) |
+| Mischgetränke der Karte | `Menu.mixers` |
+| Buchung angelegt, geändert, gelöscht (Ereignis) | `EntryAdded` (`entry.added`), `EntryChanged` (`entry.changed`), `EntryDeleted` (`entry.deleted`) |
+| Ändern, Uhrzeit ändern | `Entries.change` (`ChangeResult`, `ChangeProblem`), `Entries.timeFor` (`TimeResult`) |
+| Gruppe (gleiches Getränk, Größe, Preis), jüngste Buchung | `EntryGroup`, `EntryGroup.youngest` |
+| Kopf: Summe, Zahl der Getränke | `EveningSummary` |
+| Zähler „heute schon x-mal“ | `Entries.countsByDrink` |
+| Zurück, Aktion zurückgenommen (Ereignis) | `Entries.undo`, `Entries.undoable` (`UndoInfo`, `UndoResult`), `ActionUndone` (`action.undone`) |
+| Art der Aktion | `ActionKind` (`BOOKED`, `CHANGED`, `DELETED`) |
+| Favoritenreihe, Kachel der Reihe | `Favorites.row`, `FavoriteItem` (`OfDrink`, `OfMix`) |
+| Schlüssel eines Favoriten | `FavoriteKey` (`OfDrink`, `OfMix`; gespeichert als `code`: Getränke-Kennung oder `mix:[…]`) |
+| Anpinnen, lösen (Ereignis) | `Favorites.setPinned`, `FavoritePinned` (`favorite.pinned`), `FavoriteUnpinned` (`favorite.unpinned`) |
+| Neu ordnen der Reihe | `Favorites.reorder` |
+| Mischung von Schnaps und Mischgetränk: Kennzeichnung zusammen | `combineLabelling` (`CombinedLabelling`) |
+| Deutsche Reihenfolge, Suche ohne Umlaute | `GermanOrder`, `sortedByName`, `foldForSearch` |
+| Nach Menge (Litern) | `sortedByLiters` |
+| Im Hintergrund (Speicher) | `Roundbook.inBackground` |
+| Leiste unten: Heute, Ich | `TodayTab`, `MeTab` (Navigation Compose) |

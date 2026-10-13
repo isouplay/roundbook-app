@@ -51,6 +51,17 @@ class EventLog internal constructor(
         }
     }
 
+    /**
+     * The time a new event of this device would get now: the clock, but never behind the last own event.
+     * Times in payloads (start of an evening, time of drinking) use it, so they fit the order of the log.
+     */
+    internal fun now(): Long {
+        val last = queries.lastOfDevice(deviceId.value, ::eventOf).executeAsOneOrNull()
+        return maxOf(clock(), last?.recordedAt ?: Long.MIN_VALUE)
+    }
+
+    fun get(id: EventId): Event? = queries.selectById(id.value, ::eventOf).executeAsOneOrNull()
+
     /** All events in the order of the log (see [EventPosition]). */
     fun all(): List<Event> = queries.selectAll(::eventOf).executeAsList()
 

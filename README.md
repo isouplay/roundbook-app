@@ -5,22 +5,25 @@ oder mit der Crew. Daraus entstehen Abrechnung, Statistik und eine Promille-Sch�
 können ihre Karte per QR-Code bereitstellen.
 
 **Stand: im Aufbau.** Dieses Repo ist der Neuaufbau als App für Android und iOS mit eigenem
-Server. Bisher kann die App Orte anlegen, eine Kartendatei der alten App (`roundbook-karte`,
-Format 1) einlesen und die Karte ansehen. Alles liegt nur auf dem Gerät.
+Server. Bisher kann die App einen Abend an einem Ort beginnen und beenden, Getränke von der Karte
+buchen (auch Mischungen, aufs Haus und frei eingegeben), Favoriten je Ort zeigen, Buchungen ändern
+(auch die Uhrzeit), löschen und für fünf Minuten zurücknehmen. Unten gibt es zwei Bereiche:
+**Heute** und **Ich**; unter Ich stehen die Orte mit ihren Karten (Kartendatei der alten App,
+`roundbook-karte`, Format 1). Alles liegt nur auf dem Gerät.
 
 ## Aufbau
 
 | Modul | Inhalt |
 |---|---|
 | `core` | Gemeinsam für App und Server: Kartenmodell und Lesen der Kartendatei (später Kennungen, Signatur, Briefkasten-Protokoll). Ziele Android, iOS, JVM. |
-| `app/domain` | Lokaler Kern der App: Ereignisfolge, Speicher (SQLDelight), Orte und Karten mit Preisverlauf (später Rechnungen). Keine Oberfläche. Ziele Android, iOS, JVM. |
+| `app/domain` | Lokaler Kern der App: Ereignisfolge, Speicher (SQLDelight), Orte und Karten mit Preisverlauf, Abende, Buchungen, Favoriten (später Rechnungen). Keine Oberfläche. Ziele Android, iOS, JVM. |
 | `app/shared` | Oberfläche mit Compose Multiplatform, gleich auf Android und iOS. |
 | `app/androidApp` | Einstieg der Android-App. |
 | `app/iosApp` | Einstieg der iOS-App (Xcode-Projekt), bindet `app/shared` als Framework `Shared` ein. |
 | `server` | Server mit Ktor. |
 
-Technik: Kotlin Multiplatform, Compose Multiplatform, SQLDelight, kotlinx.serialization,
-kotlinx-datetime, Ktor, Gradle (Kotlin DSL), Java 21.
+Technik: Kotlin Multiplatform, Compose Multiplatform, Navigation Compose, SQLDelight (mit Coroutines),
+kotlinx.serialization, kotlinx-datetime, Ktor, Gradle (Kotlin DSL), Java 21.
 
 ## Bauen
 

@@ -106,4 +106,151 @@
     <string name="problem_duplicate_size_label">Größen-Bezeichnungen müssen eindeutig sein</string>
     <string name="problem_drink_without_price">hat keinen Preis</string>
     <string name="problem_mix_without_name">eine Mischung hat keinen Namen</string>
+    <!-- Navigation -->
+    <string name="tab_today">Heute</string>
+    <string name="tab_me">Ich</string>
+    <string name="me_title">Ich</string>
+    <string name="me_places">Orte</string>
+
+    <!-- Today: evening -->
+    <string name="today_title">Heute</string>
+    <string name="evening_choose_place">Ort</string>
+    <string name="evening_start">Abend beginnen</string>
+    <string name="evening_no_places">Noch kein Ort. Lege unter Ich → Orte einen an.</string>
+    <string name="evening_already_running">Es läuft schon ein Abend.</string>
+    <string name="evening_started">Abend begonnen</string>
+    <string name="evening_head">%1$s · seit %2$s Uhr</string>
+    <string name="evening_sum">Summe %1$s</string>
+    <string name="duration_minutes">%1$s min</string>
+    <string name="duration_hours">%1$s h</string>
+    <string name="duration_hours_minutes">%1$s h %2$s min</string>
+    <plurals name="drink_count">
+        <item quantity="one">%1$s Getränk</item>
+        <item quantity="other">%1$s Getränke</item>
+    </plurals>
+    <string name="evening_end">Abend beenden</string>
+    <string name="evening_end_question">Abend beenden?</string>
+    <string name="evening_end_text">%1$s · %2$s. Abrechnung und Trinkgeld kommen später dazu.</string>
+    <string name="evening_end_confirm">Beenden</string>
+    <string name="evening_end_cancel">Weiter trinken</string>
+    <string name="evening_ended">Abend beendet: %1$s</string>
+    <string name="undo">Zurück</string>
+    <string name="undone">%1$s zurückgenommen</string>
+    <string name="undone_many">%1$s× %2$s zurückgenommen</string>
+    <string name="undo_nothing">Nichts mehr zurückzunehmen.</string>
+
+    <!-- Today: picking -->
+    <string name="search_placeholder">Getränk suchen …</string>
+    <string name="search_nothing">Nichts gefunden.</string>
+    <string name="category_empty">Hier ist noch nichts drin.</string>
+    <string name="no_menu_for_place">Für diesen Ort ist noch keine Karte geladen. Freie Buchungen gehen trotzdem.</string>
+    <string name="favorites_row">Favoriten</string>
+    <string name="price_from">ab %1$s</string>
+    <string name="size_standard">Standard</string>
+    <string name="choose_size">Größe wählen</string>
+    <string name="on_the_house_choose_size">Geht aufs Haus – Größe wählen</string>
+    <string name="mix_pure">Pur</string>
+    <string name="mix_first_size">Gespritzt – 1. Größe</string>
+    <string name="mix_second_mixer">2. Mischgetränk für %1$s · %2$s</string>
+    <string name="mix_any">egal / anderes</string>
+    <string name="favorite_pin">★ Favorit</string>
+    <string name="favorite_unpin">Kein Favorit mehr</string>
+    <string name="favorite_pinned">%1$s ist jetzt Favorit</string>
+    <string name="favorite_unpinned">%1$s ist kein Favorit mehr</string>
+    <string name="hold_on_the_house">Aufs Haus buchen</string>
+    <string name="hold_on_the_house_hint">Zählt als Getränk – kostet aber nichts</string>
+    <string name="hold_pin">Als Favorit anpinnen</string>
+    <string name="hold_unpin">Aus Favoriten entfernen</string>
+    <string name="close">Schließen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="booked">%1$s · %2$s</string>
+    <string name="booked_on_the_house">%1$s · aufs Haus</string>
+    <string name="entry_mix_name">%1$s mit %2$s</string>
+    <string name="entry_name_size">%1$s %2$s</string>
+    <string name="unit_cl">%1$s cl</string>
+    <string name="unit_l">%1$s l</string>
+
+    <!-- Free entry -->
+    <string name="free_entry">Freie Buchung</string>
+    <string name="free_entry_instead">Freie Buchung stattdessen</string>
+    <string name="free_name">Bezeichnung</string>
+    <string name="free_amount">Menge (cl)</string>
+    <string name="free_abv">Alkohol (Vol.-%)</string>
+    <string name="free_price">Preis (€)</string>
+    <string name="free_counts">zählt als Getränk</string>
+    <string name="free_add">Hinzufügen</string>
+    <string name="free_change">Ändern</string>
+    <string name="free_invalid_price">Bitte einen gültigen Preis eingeben.</string>
+    <string name="free_invalid_amount">Bitte eine gültige Menge eingeben.</string>
+    <string name="free_invalid_abv">Bitte einen gültigen Alkoholgehalt eingeben.</string>
+
+    <!-- Problems when booking -->
+    <string name="book_not_running">Dieser Abend läuft nicht mehr.</string>
+    <string name="book_no_menu">Für diesen Ort ist keine Karte geladen.</string>
+    <string name="book_unknown_drink">Dieses Getränk steht nicht (mehr) auf der Karte.</string>
+    <string name="book_unknown_size">Diese Größe gibt es nicht (mehr).</string>
+    <string name="book_not_mixable">Dieses Getränk gibt es nicht gespritzt.</string>
+    <string name="book_unknown_mixer">Dieses Mischgetränk steht nicht (mehr) auf der Karte.</string>
+    <string name="book_name_empty">Bitte eine Bezeichnung eingeben.</string>
+    <string name="book_name_too_long">Die Bezeichnung ist zu lang (höchstens %1$s Zeichen).</string>
+    <string name="book_price_out_of_range">Der Preis ist nicht möglich (0 bis 9999,99 €).</string>
+    <string name="book_volume_out_of_range">Die Menge ist nicht möglich (0 bis 500 cl).</string>
+    <string name="book_abv_out_of_range">Der Alkoholgehalt ist nicht möglich (0 bis 96 Vol.-%).</string>
+
+    <!-- This evening -->
+    <string name="this_evening">Dieser Abend</string>
+    <string name="nothing_booked">Noch nichts gebucht.</string>
+    <string name="group_count">%1$s×</string>
+    <string name="group_each">je %1$s</string>
+    <string name="group_on_the_house">aufs Haus</string>
+    <string name="group_no_price">–</string>
+    <string name="delete_hold">%1$s löschen (gedrückt halten)</string>
+
+    <!-- Change entries -->
+    <string name="edit_title">Getränk ändern</string>
+    <string name="edit_instead">Statt %1$s</string>
+    <string name="edit_all">Alle %1$s ändern</string>
+    <string name="edit_one">Nur eine</string>
+    <string name="edit_time">Uhrzeit</string>
+    <string name="edit_time_apply">Uhrzeit ändern</string>
+    <string name="edit_changed">Getränk geändert</string>
+    <string name="edit_changed_many">%1$s Buchungen geändert</string>
+    <string name="edit_changed_time">Geändert · jetzt %1$s Uhr</string>
+    <string name="edit_unchanged">Nichts geändert.</string>
+    <string name="edit_gone">Diese Buchung gibt es nicht mehr.</string>
+    <string name="time_invalid">Bitte eine Uhrzeit wie 21:30 eingeben.</string>
+    <string name="time_before_start">%1$s liegt vor dem Beginn des Abends (%2$s Uhr).</string>
+    <string name="time_in_future">%1$s liegt in der Zukunft.</string>
+    <string name="time_after_end">%1$s liegt nach dem Ende des Abends (%2$s Uhr).</string>
+
+    <!-- Allergens and additives -->
+    <string name="labelling_contains">Enthält: %1$s</string>
+    <string name="labelling_additives">Zusatzstoffe: %1$s</string>
+    <string name="labelling_none">Keine kennzeichnungspflichtigen Allergene oder Zusatzstoffe</string>
+    <string name="labelling_missing">Keine Angabe zu %1$s</string>
+    <string name="labelling_and">%1$s und %2$s</string>
+    <string name="allergen_gluten">Gluten</string>
+    <string name="allergen_crustaceans">Krebstiere</string>
+    <string name="allergen_eggs">Eier</string>
+    <string name="allergen_fish">Fisch</string>
+    <string name="allergen_peanuts">Erdnüsse</string>
+    <string name="allergen_soy">Soja</string>
+    <string name="allergen_milk">Milch</string>
+    <string name="allergen_tree_nuts">Schalenfrüchte</string>
+    <string name="allergen_celery">Sellerie</string>
+    <string name="allergen_mustard">Senf</string>
+    <string name="allergen_sesame">Sesam</string>
+    <string name="allergen_sulphites">Schwefeldioxid und Sulfite</string>
+    <string name="allergen_lupin">Lupinen</string>
+    <string name="allergen_molluscs">Weichtiere</string>
+    <string name="additive_colouring">mit Farbstoff</string>
+    <string name="additive_preservative">mit Konservierungsstoff</string>
+    <string name="additive_antioxidant">mit Antioxidationsmittel</string>
+    <string name="additive_flavour_enhancer">mit Geschmacksverstärker</string>
+    <string name="additive_sulphurated">geschwefelt</string>
+    <string name="additive_phosphate">mit Phosphat</string>
+    <string name="additive_sweetener">mit Süßungsmittel</string>
+    <string name="additive_phenylalanine">enthält eine Phenylalaninquelle</string>
+    <string name="additive_caffeine">koffeinhaltig</string>
+    <string name="additive_quinine">chininhaltig</string>
 </resources>

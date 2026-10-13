@@ -1,5 +1,7 @@
 package io.github.isouplay.roundbook.domain.place
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import io.github.isouplay.roundbook.core.menu.MenuLimits
 import io.github.isouplay.roundbook.core.menu.codePointLength
 import io.github.isouplay.roundbook.domain.PlaceId
@@ -8,7 +10,10 @@ import io.github.isouplay.roundbook.domain.event.EventLog
 import io.github.isouplay.roundbook.domain.event.EventType
 import io.github.isouplay.roundbook.domain.event.PlaceCreated
 import io.github.isouplay.roundbook.domain.event.PlaceRenamed
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
+import kotlin.coroutines.CoroutineContext
 
 /** Kind of a place. In stage 1 only [LOCAL] (on this device only). */
 @Serializable
@@ -44,10 +49,17 @@ class Places internal constructor(
     private val database: RoundbookDatabase,
     private val eventLog: EventLog,
     private val newId: () -> String,
+    private val readContext: CoroutineContext,
 ) {
     /** All places, by name. */
-    fun all(): List<Place> = database.placeQueries.selectAll(::placeOf).executeAsList()
-        .sortedWith(compareBy({ it.name.lowercase() }, { it.id.value }))
+    fun all(): List<Place> = sortedPlaces(database.placeQueries.selectAll(::placeOf).executeAsList())
+
+    /** All places, by name; updates itself. */
+    fun allFlow(): Flow<List<Place>> =
+        database.placeQueries.selectAll(::placeOf).asFlow().mapToList(readContext).map(::sortedPlaces)
+
+    private fun sortedPlaces(places: List<Place>): List<Place> =
+        places.sortedWith(compareBy({ it.name.lowercase() }, { it.id.value }))
 
     fun get(id: PlaceId): Place? = database.placeQueries.selectById(id.value, ::placeOf).executeAsOneOrNull()
 

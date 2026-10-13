@@ -1,0 +1,28 @@
+-- Cached view of the evenings, derived from the event log. At most one evening runs (ended_at IS NULL).
+CREATE TABLE evening (
+    id TEXT NOT NULL PRIMARY KEY,
+    place_id TEXT NOT NULL,
+    -- Milliseconds since 1970-01-01 UTC.
+    started_at INTEGER NOT NULL,
+    ended_at INTEGER
+);
+
+CREATE INDEX evening_place ON evening(place_id, started_at);
+
+insert:
+INSERT OR IGNORE INTO evening(id, place_id, started_at, ended_at) VALUES (?, ?, ?, NULL);
+
+updateEnded:
+UPDATE evening SET ended_at = ? WHERE id = ?;
+
+selectById:
+SELECT * FROM evening WHERE id = ?;
+
+selectRunning:
+SELECT * FROM evening WHERE ended_at IS NULL ORDER BY started_at DESC, id DESC LIMIT 1;
+
+selectLatest:
+SELECT * FROM evening ORDER BY started_at DESC, id DESC LIMIT 1;
+
+deleteAll:
+DELETE FROM evening;

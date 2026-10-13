@@ -1,0 +1,75 @@
+-- Cached view of the entries (bookings) of the evenings, derived from the event log. An entry holds a
+-- snapshot of the drink at the time of booking (EntrySnapshot as JSON), so later menu changes do not
+-- change it.
+CREATE TABLE entry (
+    id TEXT NOT NULL PRIMARY KEY,
+    evening_id TEXT NOT NULL,
+    -- When it was drunk (can be corrected), milliseconds since 1970-01-01 UTC.
+    drunk_at INTEGER NOT NULL,
+    -- Time of recording of the event that added it.
+    added_at INTEGER NOT NULL,
+    snapshot TEXT NOT NULL
+);
+
+CREATE INDEX entry_evening ON entry(evening_id);
+
+-- Which events concern which entry. Lets an entry be built anew from its events when an action is
+-- taken back. Part of the cached views, rebuilt with them.
+CREATE TABLE entry_event (
+    entry_id TEXT NOT NULL,
+    event_id TEXT NOT NULL,
+    PRIMARY KEY (entry_id, event_id)
+);
+
+-- Events that were taken back, and by which event. Part of the cached views.
+CREATE TABLE undone_event (
+    event_id TEXT NOT NULL PRIMARY KEY,
+    undone_by TEXT NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO entry(id, evening_id, drunk_at, added_at, snapshot) VALUES (?, ?, ?, ?, ?);
+
+updateSnapshot:
+UPDATE entry SET snapshot = ? WHERE id = ?;
+
+updateDrunkAt:
+UPDATE entry SET drunk_at = ? WHERE id = ?;
+
+delete:
+DELETE FROM entry WHERE id = ?;
+
+selectById:
+SELECT * FROM entry WHERE id = ?;
+
+selectByEvening:
+SELECT * FROM entry WHERE evening_id = ? ORDER BY drunk_at, added_at, id;
+
+-- Entries of the evenings at a place that started at or after the given time (favourites).
+selectAtPlaceSince:
+SELECT entry.snapshot FROM entry JOIN evening ON evening.id = entry.evening_id
+WHERE evening.place_id = ? AND evening.started_at >= ?;
+
+deleteAll:
+DELETE FROM entry;
+
+linkEvent:
+INSERT OR IGNORE INTO entry_event(entry_id, event_id) VALUES (?, ?);
+
+-- All events of one entry in the order of the event log.
+eventsOfEntry:
+SELECT event.* FROM event JOIN entry_event ON entry_event.event_id = event.id
+WHERE entry_event.entry_id = ?
+ORDER BY event.recorded_at, event.device_id, event.sequence;
+
+deleteAllLinks:
+DELETE FROM entry_event;
+
+markUndone:
+INSERT OR IGNORE INTO undone_event(event_id, undone_by) VALUES (?, ?);
+
+countUndone:
+SELECT COUNT(*) FROM undone_event WHERE event_id = ?;
+
+deleteAllUndone:
+DELETE FROM undone_event;

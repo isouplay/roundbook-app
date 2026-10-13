@@ -1,0 +1,20 @@
+-- Cached view of the pinned favourites per place, derived from the event log.
+-- fav_key: a drink id, or "mix:[spirit id, mixer id]" for a mix (FavoriteKey.code).
+CREATE TABLE favorite (
+    place_id TEXT NOT NULL,
+    fav_key TEXT NOT NULL,
+    pinned_at INTEGER NOT NULL,
+    PRIMARY KEY (place_id, fav_key)
+);
+
+pin:
+INSERT OR IGNORE INTO favorite(place_id, fav_key, pinned_at) VALUES (?, ?, ?);
+
+unpin:
+DELETE FROM favorite WHERE place_id = ? AND fav_key = ?;
+
+selectByPlace:
+SELECT fav_key FROM favorite WHERE place_id = ? ORDER BY pinned_at, fav_key;
+
+deleteAll:
+DELETE FROM favorite;

@@ -41,3 +41,14 @@ SELECT COUNT(*) FROM event
 WHERE recorded_at > :recordedAt
    OR (recorded_at = :recordedAt AND device_id > :deviceId)
    OR (recorded_at = :recordedAt AND device_id = :deviceId AND sequence > :sequence);
+
+selectById:
+SELECT * FROM event WHERE id = ?;
+
+-- Own actions that can still be taken back: events of this device of the given kinds, recorded since
+-- the given time and not taken back yet. Newest first.
+undoCandidates:
+SELECT * FROM event
+WHERE device_id = :deviceId AND type IN :types AND recorded_at >= :since
+  AND id NOT IN (SELECT event_id FROM undone_event)
+ORDER BY recorded_at DESC, sequence DESC;
